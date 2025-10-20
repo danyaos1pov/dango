@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Даня</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #0f111a;
+      --bg-light: #f9f9f9;
+      --text-dark: #ffffff;
+      --text-light: #1a1a1a;
+      --accent: #4f46e5;
+      --card-bg-dark: rgba(28, 31, 43, 0.75);
+      --card-bg-light: rgba(255, 255, 255, 0.75);
+      --shadow-dark: rgba(0,0,0,0.5);
+      --shadow-light: rgba(0,0,0,0.1);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+      transition: background-color 0.5s, color 0.5s;
+      position: relative;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body.light {
+      background-color: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: var(--card-bg-dark);
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px var(--shadow-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+    }
+
+    body.light .theme-toggle {
+      background-color: var(--card-bg-light);
+      box-shadow: 0 5px 15px var(--shadow-light);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1);
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 100px 20px 40px;
+      text-align: center;
+    }
+
+    .profile {
+      margin-bottom: 30px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s forwards 0.1s;
+    }
+
+    .profile img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+      margin-bottom: 15px;
+      object-fit: cover;
+    }
+
+    h1 {
+      margin: 0;
+      font-weight: 800;
+      font-size: 2rem;
+    }
+
+    p {
+      margin: 5px 0 20px;
+      color: inherit;
+      opacity: 0.8;
+    }
+
+    .section-title {
+      font-weight: 700;
+      margin-bottom: 15px;
+      text-align: center;
+      font-size: 1.2rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s forwards;
+    }
+
+    .links, .projects {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .link-card {
+      padding: 15px 20px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: 600;
+      background-color: var(--card-bg-dark);
+      color: inherit;
+      box-shadow: 0 8px 20px var(--shadow-dark);
+      transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s, backdrop-filter 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 1rem;
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s forwards;
+    }
+
+    body.light .link-card {
+      background-color: var(--card-bg-light);
+      box-shadow: 0 8px 20px var(--shadow-light);
+    }
+
+    .link-card:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 15px 30px var(--shadow-dark);
+    }
+
+    .link-card i {
+      width: 24px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .link-card:hover i {
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .links .link-card:nth-child(1) { animation-delay: 0.2s; }
+    .links .link-card:nth-child(2) { animation-delay: 0.35s; }
+    .links .link-card:nth-child(3) { animation-delay: 0.5s; }
+
+    .projects .link-card:nth-child(1) { animation-delay: 0.2s; }
+
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" id="themeToggle">🌙</button>
+
+  <div class="container">
+    <div class="profile">
+      <img src="https://sun9-88.userapi.com/s/v1/ig2/cNjXCzRgns3xS2PbnDyfxnXYpGyIYB7Gc55GntogbpS4LQwQrOnxAlawmnHRjNj3Ao8oviKS-2XcJPeHLxgsLfkA.jpg?quality=95&as=32x43,48x65,72x97,108x145,160x215,240x323,360x484,480x645,540x726,640x860,720x968,1080x1452,1190x1600&from=bu&cs=1190x0" alt="Аватар Danya OS">
+      <h1>Даня</h1>
+      <p>Подписывайся на меня</p>
+    </div>
+
+    <div class="social-section">
+      <div class="links">
+        <a href="https://vk.com/danyaos1pov" class="link-card" target="_blank">
+          <i class="fab fa-vk"></i> ВКонтакте
+        </a>
+        <a href="https://t.me/danyaos1pov" class="link-card" target="_blank">
+          <i class="fab fa-telegram-plane"></i> Telegram
+        </a>
+        <a href="https://www.instagram.com/danyaos1pov/" class="link-card" target="_blank">
+          <i class="fab fa-instagram"></i> Instagram
+        </a>
+      </div>
+    </div>
+
+    <div class="projects-section">
+      <div class="section-title">Проекты</div>
+      <div class="projects">
+        <a href="https://t.me/on1xVPN_bot" class="link-card" target="_blank">
+          <i class="fas fa-lock"></i> ON1X VPN
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('themeToggle');
+
+    // Загрузка сохранённой темы
+    if(localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light');
+      themeToggle.textContent = '☀️';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+      if(document.body.classList.contains('light')) {
+        themeToggle.textContent = '☀️';
+        localStorage.setItem('theme', 'light');
+      } else {
+        themeToggle.textContent = '🌙';
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+  </script>
+</body>
+</html>
