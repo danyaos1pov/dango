@@ -115,7 +115,9 @@
       gap: 15px;
       margin-bottom: 30px;
     }
-
+    
+    /* Удален класс .project-with-badge, его стили перенесены */
+    
     .link-card {
       padding: 15px 20px;
       border-radius: 20px;
@@ -125,7 +127,12 @@
       color: inherit;
       box-shadow: 0 8px 20px var(--shadow-dark);
       transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s, backdrop-filter 0.3s;
-      display: flex;
+      
+      /* Используем position: relative для позиционирования бейджа относительно ссылки */
+      position: relative; 
+      
+      /* Используем inline-flex для лучшего центрирования содержимого */
+      display: inline-flex; 
       align-items: center;
       justify-content: center;
       gap: 12px;
@@ -145,6 +152,30 @@
       transform: translateY(-3px) scale(1.02);
       box-shadow: 0 15px 30px var(--shadow-dark);
     }
+    
+    /* Стили для красной плашки "Основатель" */
+    .founder-badge {
+      position: absolute; /* Позиционируем плашку абсолютно относительно ссылки */
+      
+      /* Изменения для правого верхнего угла */
+      top: -10px;    /* Сдвиг вверх */
+      right: -10px;  /* Сдвиг вправо */
+      transform: none; /* Убираем вертикальное центрирование */
+      
+      background-color: #ef4444; /* Насыщенный красный цвет */
+      color: var(--text-dark); /* Белый текст */
+      font-size: 0.75rem; /* Меньший размер шрифта */
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px var(--shadow-dark); /* Добавим небольшую тень */
+      z-index: 100; /* Поднимем над другими элементами */
+      
+      /* Анимация для плавного появления */
+      opacity: 0;
+      transform: translate(20px, -20px); /* Смещение для начального положения анимации */
+      animation: badgeInTopRight 0.6s forwards 0.3s; 
+    }
 
     .link-card i {
       width: 24px;
@@ -160,6 +191,14 @@
       to {
         opacity: 1;
         transform: translateY(0);
+      }
+    }
+    
+    /* Новая анимация для появления из угла */
+    @keyframes badgeInTopRight {
+      to {
+        opacity: 1;
+        transform: translate(0, 0); /* Убираем трансформацию, чтобы плашка встала на место */
       }
     }
 
@@ -199,7 +238,9 @@
       <div class="section-title">Проекты</div>
       <div class="projects">
         <a href="https://t.me/on1xVPN_bot" class="link-card" target="_blank">
-          <i class="fas fa-lock"></i> ON1X VPN
+          <i class="fas fa-lock"></i> 
+          <span>ON1X VPN</span>
+          <span class="founder-badge">Основатель</span>
         </a>
       </div>
     </div>
