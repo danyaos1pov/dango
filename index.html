@@ -1,549 +1,229 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡️ on1xVPN — Быстрый VPN в Telegram</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    
-    <style>
-        /* --- Общие Стили и Сброс --- */
-        :root {
-            --primary-color: #007aff; /* Акцентный синий Apple */
-            --transition-speed: 0.3s;
-            /* Переменные для темной темы (по умолчанию) */
-            --bg-color: #1c1c1e; /* Темный фон (Dark Mode) */
-            --card-bg: #2c2c2e;
-            --text-color: #ffffff;
-            --secondary-text: #b0b0b0;
-            --shadow-light: rgba(255, 255, 255, 0.05);
-            --shadow-dark: rgba(0, 0, 0, 0.5);
-            --border-color: #38383a;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Даня</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #0f111a;
+      --bg-light: #f9f9f9;
+      --text-dark: #ffffff;
+      --text-light: #1a1a1a;
+      --accent: #4f46e5;
+      --card-bg-dark: rgba(28, 31, 43, 0.75);
+      --card-bg-light: rgba(255, 255, 255, 0.75);
+      --shadow-dark: rgba(0,0,0,0.5);
+      --shadow-light: rgba(0,0,0,0.1);
+    }
 
-        /* Переменные для светлой темы */
-        body[data-theme="light"] {
-            --bg-color: #f2f2f7; /* Светлый фон (Light Mode) */
-            --card-bg: #ffffff;
-            --text-color: #000000;
-            --secondary-text: #6c6c6c;
-            --shadow-light: rgba(0, 0, 0, 0.05);
-            --shadow-dark: rgba(0, 0, 0, 0.15);
-            --border-color: #e0e0e0;
-        }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+      transition: background-color 0.5s, color 0.5s;
+      position: relative;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    body.light {
+      background-color: var(--bg-light);
+      color: var(--text-light);
+    }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color var(--transition-speed), color var(--transition-speed);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start; 
-            min-height: 100vh;
-            overflow-x: hidden; /* Важно для предотвращения горизонтального скролла */
-        }
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: var(--card-bg-dark);
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px var(--shadow-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+    }
 
-        /* --- Контейнер Мобильного Приложения --- */
-        #app-container {
-            width: 100%;
-            max-width: 420px; /* Ширина мобильного телефона */
-            min-height: 100vh; 
-            background-color: var(--bg-color);
-            box-shadow: 0 0 50px var(--shadow-dark); 
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow-x: hidden; /* Важно для анимации страниц */
-        }
+    body.light .theme-toggle {
+      background-color: var(--card-bg-light);
+      box-shadow: 0 5px 15px var(--shadow-light);
+    }
 
-        /* --- Шапка (Header) --- */
-        #app-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
+    .theme-toggle:hover {
+      transform: scale(1.1);
+    }
 
-        #app-header h1 {
-            font-size: 20px;
-            font-weight: 800;
-        }
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 100px 20px 40px;
+      text-align: center;
+    }
 
-        #theme-switcher {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
+    .profile {
+      margin-bottom: 30px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s forwards 0.1s;
+    }
 
-        /* --- Контент (Main Content) и Страницы --- */
-        #app-content {
-            flex-grow: 1;
-            width: 100%;
-            position: relative;
-            padding-bottom: 80px; /* Отступ снизу для навигации */
-        }
+    .profile img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+      margin-bottom: 15px;
+      object-fit: cover;
+    }
 
-        .page {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 20px;
-            min-height: calc(100vh - 70px - 70px); /* Примерная высота: 100vh - header - footer. Можно упростить, если содержимое не слишком большое */
-            overflow-y: auto;
-            opacity: 0;
-            transform: translateX(100%);
-            transition: opacity var(--transition-speed), transform var(--transition-speed);
-            z-index: 1; 
-            padding-top: 0;
-        }
+    h1 {
+      margin: 0;
+      font-weight: 800;
+      font-size: 2rem;
+    }
 
-        .page.active {
-            opacity: 1;
-            transform: translateX(0);
-            position: relative; 
-            z-index: 2;
-        }
+    p {
+      margin: 5px 0 20px;
+      color: inherit;
+      opacity: 0.8;
+    }
 
-        .page h2 {
-            font-size: 24px;
-            margin-bottom: 25px;
-            font-weight: 800;
-            padding-top: 10px; 
-        }
+    .section-title {
+      font-weight: 700;
+      margin-bottom: 15px;
+      text-align: center;
+      font-size: 1.2rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s forwards;
+    }
 
-        /* --- Карточки Информации --- */
-        .info-card, .tariff-card {
-            background-color: var(--card-bg);
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px var(--shadow-dark);
-            border: 1px solid var(--border-color);
-            transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
-        }
+    .links, .projects {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
 
-        .info-card h3 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
+    .link-card {
+      padding: 15px 20px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: 600;
+      background-color: var(--card-bg-dark);
+      color: inherit;
+      box-shadow: 0 8px 20px var(--shadow-dark);
+      transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s, backdrop-filter 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 1rem;
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s forwards;
+    }
 
-        /* --- Анимация Скорости --- */
-        .speed-meter {
-            height: 10px;
-            background-color: var(--border-color);
-            border-radius: 5px;
-            margin: 15px 0 5px 0;
-            overflow: hidden;
-        }
+    body.light .link-card {
+      background-color: var(--card-bg-light);
+      box-shadow: 0 8px 20px var(--shadow-light);
+    }
 
-        .speed-bar {
-            width: 100%;
-            height: 100%;
-            /* Градиентный эффект "текущей" скорости */
-            background: linear-gradient(90deg, #ff0070, var(--primary-color), #00ff70);
-            animation: speedFlow 3s infinite linear;
-        }
+    .link-card:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 15px 30px var(--shadow-dark);
+    }
 
-        @keyframes speedFlow {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(0); }
-        }
+    .link-card i {
+      width: 24px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
 
-        .speed-value {
-            font-weight: 800;
-            font-size: 22px;
-            text-align: center;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
+    .link-card:hover i {
+      transform: translateY(-2px);
+    }
 
-        /* --- Кнопки --- */
-        .main-button {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 18px;
-            margin-top: 25px;
-            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
-        }
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-        .primary-button {
-            background-color: var(--primary-color);
-            color: white;
-            box-shadow: 0 4px 20px rgba(0, 122, 255, 0.4);
-        }
+    .links .link-card:nth-child(1) { animation-delay: 0.2s; }
+    .links .link-card:nth-child(2) { animation-delay: 0.35s; }
+    .links .link-card:nth-child(3) { animation-delay: 0.5s; }
 
-        .primary-button:active {
-            transform: scale(0.98);
-        }
+    .projects .link-card:nth-child(1) { animation-delay: 0.2s; }
 
-        /* Анимация "Пульс" */
-        .pulse-animation {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 122, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0); }
-        }
-
-        /* --- Тарифы --- */
-        .tariff-grid {
-            display: grid;
-            gap: 15px;
-        }
-
-        .tariff-card {
-            text-align: center;
-            padding: 20px 15px;
-        }
-
-        .tariff-card h4 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .tariff-card .price {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-
-        .tariff-card.recommended {
-            border: 2px solid #ff9500; /* Оранжевый акцент для лучшего предложения */
-            box-shadow: 0 0 20px rgba(255, 149, 0, 0.3);
-            transform: scale(1.02);
-            transition: transform 0.3s, border-color 0.3s;
-        }
-
-        .small-button {
-            display: block;
-            padding: 10px;
-            background-color: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            transition: background-color 0.2s;
-        }
-
-        .small-button:active {
-            background-color: #005bb5;
-        }
-
-        .hidden-tariffs {
-            background: none;
-            box-shadow: none;
-            border: none;
-            text-align: center;
-            font-size: 12px;
-            color: var(--secondary-text);
-        }
-
-        /* --- FAQ (Аккордеон) --- */
-        .faq-item {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            margin-bottom: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px var(--shadow-dark);
-            border: 1px solid var(--border-color);
-        }
-
-        .faq-item summary {
-            padding: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            list-style: none; 
-            position: relative;
-            outline: none;
-            user-select: none;
-        }
-
-        .faq-item summary::-webkit-details-marker {
-            display: none;
-        }
-
-        .faq-item summary::after {
-            content: '👇'; /* Стрелка вниз */
-            position: absolute;
-            right: 15px;
-            transition: transform 0.2s;
-        }
-
-        .faq-item[open] summary::after {
-            content: '👆'; /* Стрелка вверх */
-            transform: rotate(0deg);
-        }
-
-        .faq-item p {
-            padding: 10px 15px 15px 15px;
-            font-size: 14px;
-            color: var(--secondary-text);
-            border-top: 1px solid var(--border-color);
-        }
-
-        /* --- Навигация (Navbar) --- */
-        #app-navbar {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            background-color: var(--card-bg);
-            border-top: 1px solid var(--border-color);
-            position: fixed; 
-            bottom: 0;
-            width: 100%;
-            max-width: 420px; 
-            padding: 10px 0;
-            z-index: 100;
-        }
-
-        .nav-item {
-            text-decoration: none;
-            color: var(--secondary-text);
-            font-size: 11px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 5px;
-            border-radius: 8px;
-            transition: color 0.2s, background-color 0.2s;
-            font-weight: 600;
-            min-width: 20%;
-        }
-
-        .nav-item.active {
-            color: var(--primary-color);
-            background-color: rgba(0, 122, 255, 0.1);
-        }
-        
-        .support-link {
-            color: #ff3b30 !important; /* Красный акцент для поддержки */
-        }
-        
-        /* --- Адаптация для ПК (Desktop) --- */
-        @media (min-width: 421px) {
-            body {
-                align-items: center;
-            }
-            #app-container {
-                min-height: 850px; /* Фиксированная высота "окна" на ПК */
-                border-radius: 30px;
-                margin: 50px 0;
-                overflow: hidden;
-                box-shadow: 0 10px 60px var(--shadow-dark);
-            }
-
-            #app-navbar {
-                position: absolute; 
-                border-bottom-left-radius: 30px;
-                border-bottom-right-radius: 30px;
-            }
-        }
-    </style>
+  </style>
 </head>
-<body data-theme="dark">
-    <div id="app-container">
-        
-        <header id="app-header">
-            <h1>on1xVPN ⚡️</h1>
-            <button id="theme-switcher">☀️</button>
-        </header>
+<body>
+  <button class="theme-toggle" id="themeToggle">🌙</button>
 
-        <main id="app-content">
-
-            <section id="home" class="page active">
-                <h2>Ваш VPN в Telegram — Максимальная Скорость! 💨</h2>
-                
-                <div class="info-card protocol-card">
-                    <h3>Что такое VPN? 🧐</h3>
-                    <p>VPN (Virtual Private Network) — это защищенный туннель, который шифрует ваш трафик, скрывает IP-адрес и обеспечивает доступ к заблокированным ресурсам. Ваша приватность под контролем! 🔒</p>
-                </div>
-                
-                <div class="info-card speed-card">
-                    <h3>Наш Протокол & Скорость 🚀</h3>
-                    <p>Мы используем передовой протокол **VLESS + Reality**. Это максимально быстрая, стабильная и незаметная технология, разработанная для обхода любых блокировок.</p>
-                    <div class="speed-meter">
-                        <div class="speed-bar"></div>
-                    </div>
-                    <p class="speed-value">Скорость: 25 Гбит/с 🔥</p>
-                    <p class="speed-note">Это означает, что ваш интернет будет буквально летать, а соединение будет надежным в любой точке мира!</p>
-                </div>
-                
-                <a href="https://t.me/on1xVPN_bot" class="main-button primary-button pulse-animation">
-                    Подключиться Сейчас! ➡️🤖
-                </a>
-            </section>
-
-            <section id="tariffs" class="page">
-                <h2>Выберите свой План 🗓️</h2>
-                <div class="tariff-grid">
-                    
-                    <div class="tariff-card">
-                        <h4>30 Дней (Старт) 📅</h4>
-                        <p class="price">100 ₽</p>
-                        <a href="https://t.me/on1xVPN_bot" class="small-button">Подключить 🛒</a>
-                    </div>
-
-                    <div class="tariff-card recommended">
-                        <h4>90 Дней (Хит! 🎁)</h4>
-                        <p class="price">300 ₽</p>
-                        <a href="https://t.me/on1xVPN_bot" class="small-button">Подключить 🛒</a>
-                    </div>
-                    
-                    <div class="tariff-card">
-                        <h4>365 Дней (Годовой План) 👑</h4>
-                        <p class="price">1200 ₽</p>
-                        <a href="https://t.me/on1xVPN_bot" class="small-button">Подключить 🛒</a>
-                    </div>
-
-                    <div class="tariff-card hidden-tariffs">
-                        <p>Полный список тарифов (60 дней - 200₽, 180 дней - 600₽) доступен после перехода в наш Telegram-бот. </p>
-                    </div>
-
-                </div>
-            </section>
-
-            <section id="faq" class="page">
-                <h2>Часто Задаваемые Вопросы 🤔</h2>
-                <div class="faq-list">
-                    
-                    <details class="faq-item">
-                        <summary>Как подключиться? 💡</summary>
-                        <p>Перейдите по кнопке **"Подключиться"** или напрямую в наш бот **(@on1xVPN_bot)**. Внутри бота выберите тариф и оплатите его. Бот автоматически выдаст вам конфигурационный файл и подробную инструкцию по установке на ваше устройство (iOS, Android, Windows, Mac). Все очень просто и занимает пару минут! 😉</p>
-                    </details>
-                    
-                    <details class="faq-item">
-                        <summary>Как обновить подписку? 🔁</summary>
-                        <p>Просто перейдите в наш бот **(@on1xVPN_bot)** и выберите новый тариф. Бот автоматически продлит вашу текущую подписку, используя тот же конфигурационный файл. Вам не нужно ничего перенастраивать! Это максимально удобно. 🙌</p>
-                    </details>
-
-                    <details class="faq-item">
-                        <summary>Как пригласить друзей? 🤝</summary>
-                        <p>Внутри нашего Telegram-бота есть специальный раздел **"Партнерская программа"** или **"Пригласить друга"**. Вы получите свою уникальную ссылку. За каждого приглашенного друга, который оплатит подписку, вы получите **бонус на свой счет или скидку**! Пользуйтесь VPN бесплатно, приглашая друзей! 💰</p>
-                    </details>
-                </div>
-            </section>
-        </main>
-
-        <nav id="app-navbar">
-            <a href="#home" class="nav-item active" data-target="home">🏠<br>Главная</a>
-            <a href="#tariffs" class="nav-item" data-target="tariffs">💰<br>Тарифы</a>
-            <a href="#faq" class="nav-item" data-target="faq">❓<br>FAQ</a>
-            <a href="https://t.me/on1xVPN_admin" class="nav-item support-link">🛠<br>Поддержка</a>
-        </nav>
-
+  <div class="container">
+    <div class="profile">
+      <img src="https://sun9-88.userapi.com/s/v1/ig2/cNjXCzRgns3xS2PbnDyfxnXYpGyIYB7Gc55GntogbpS4LQwQrOnxAlawmnHRjNj3Ao8oviKS-2XcJPeHLxgsLfkA.jpg?quality=95&as=32x43,48x65,72x97,108x145,160x215,240x323,360x484,480x645,540x726,640x860,720x968,1080x1452,1190x1600&from=bu&cs=1190x0" alt="Аватар Danya OS">
+      <h1>Даня</h1>
+      <p>Подписывайся на меня</p>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const themeSwitcher = document.getElementById('theme-switcher');
-            const body = document.body;
-            const navItems = document.querySelectorAll('.nav-item:not(.support-link)');
-            const pages = document.querySelectorAll('.page');
-            
-            // --- 1. Переключение Темы ---
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            body.setAttribute('data-theme', savedTheme);
-            themeSwitcher.innerHTML = savedTheme === 'dark' ? '☀️' : '🌙'; // Установка начального смайлика
-            
-            themeSwitcher.addEventListener('click', () => {
-                const currentTheme = body.getAttribute('data-theme');
-                if (currentTheme === 'dark') {
-                    body.setAttribute('data-theme', 'light');
-                    themeSwitcher.innerHTML = '🌙'; 
-                    localStorage.setItem('theme', 'light');
-                } else {
-                    body.setAttribute('data-theme', 'dark');
-                    themeSwitcher.innerHTML = '☀️'; 
-                    localStorage.setItem('theme', 'dark');
-                }
-            });
+    <div class="social-section">
+      <div class="links">
+        <a href="https://vk.com/danyaos1pov" class="link-card" target="_blank">
+          <i class="fab fa-vk"></i> ВКонтакте
+        </a>
+        <a href="https://t.me/danyaos1pov" class="link-card" target="_blank">
+          <i class="fab fa-telegram-plane"></i> Telegram
+        </a>
+        <a href="https://www.instagram.com/danyaos1pov/" class="link-card" target="_blank">
+          <i class="fab fa-instagram"></i> Instagram
+        </a>
+      </div>
+    </div>
 
-            // --- 2. Меню и Переключение Страниц (с анимацией) ---
-            const switchPage = (targetId) => {
-                const targetPage = document.getElementById(targetId);
-                const currentPage = document.querySelector('.page.active');
-                
-                if (currentPage && currentPage.id !== targetId) {
-                    // Анимация скрытия текущей страницы
-                    currentPage.style.opacity = '0';
-                    // Определяем направление (простой эффект: всегда уходит влево)
-                    currentPage.style.transform = 'translateX(-100%)';
-                    
-                    // Установка активного меню
-                    navItems.forEach(nav => nav.classList.remove('active'));
-                    document.querySelector(`.nav-item[data-target="${targetId}"]`).classList.add('active');
+    <div class="projects-section">
+      <div class="section-title">Проекты</div>
+      <div class="projects">
+        <a href="https://t.me/on1xVPN_bot" class="link-card" target="_blank">
+          <i class="fas fa-lock"></i> ON1X VPN
+        </a>
+      </div>
+    </div>
+  </div>
 
-                    // Задержка для анимации
-                    setTimeout(() => {
-                        // Сброс всех классов active
-                        pages.forEach(p => p.classList.remove('active'));
-                        // Позиционируем новую страницу справа (вне экрана) перед активацией
-                        targetPage.style.transform = 'translateX(100%)';
-                        
-                        // Активируем целевую страницу
-                        targetPage.classList.add('active');
-                        
-                        // Анимация появления
-                        setTimeout(() => {
-                            targetPage.style.opacity = '1';
-                            targetPage.style.transform = 'translateX(0)';
-                        }, 50); // Небольшая задержка после установки класса 'active'
+  <script>
+    const themeToggle = document.getElementById('themeToggle');
 
-                        // Возвращаем старую страницу в исходное положение для следующей анимации
-                        currentPage.style.transform = 'translateX(100%)'; 
+    // Загрузка сохранённой темы
+    if(localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light');
+      themeToggle.textContent = '☀️';
+    }
 
-                    }, 300); // 300ms - время, заданное в transition-speed
-                } else if (!currentPage) {
-                     // Начальная загрузка, если нет активной
-                    targetPage.classList.add('active');
-                    targetPage.style.opacity = '1';
-                    targetPage.style.transform = 'translateX(0)';
-                    document.querySelector(`.nav-item[data-target="${targetId}"]`).classList.add('active');
-                }
-            };
-
-            navItems.forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = item.getAttribute('data-target');
-                    switchPage(targetId);
-                });
-            });
-
-            // Инициализация при загрузке
-            const initialHash = window.location.hash.replace('#', '') || 'home';
-            if (document.getElementById(initialHash)) {
-                switchPage(initialHash);
-            } else {
-                switchPage('home');
-            }
-        });
-    </script>
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+      if(document.body.classList.contains('light')) {
+        themeToggle.textContent = '☀️';
+        localStorage.setItem('theme', 'light');
+      } else {
+        themeToggle.textContent = '🌙';
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+  </script>
 </body>
 </html>
